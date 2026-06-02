@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="TOSS-Codec demo page based on the paper TOSS: Temporal Offset Supervision for Low-Bitrate Streaming Audio Codecs on Mobile Devices."
+    />
+    <title>TOSS-Codec Demo</title>
+    <link rel="stylesheet" href="assets/css/style.css?v=5" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="TOSS-Codec home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>TOSS-Codec</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#innovation">Method</a>
+        <a href="#results">Results</a>
+        <a href="#audio-3kbps">3 kbps</a>
+        <a href="#audio-6kbps">6 kbps</a>
+        <a href="#model-family">Model Family</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy">
+          <p class="eyebrow">Paper demo</p>
+          <h1>TOSS: Temporal Offset Supervision for Low-Bitrate Streaming Audio Codecs on Mobile Devices.</h1>
+          <p class="hero-lede">
+            Recent neural audio codecs achieve high perceptual quality at low bitrates, but fully causal streaming
+            codecs still suffer from the lack of future acoustic context. We introduce a low-bitrate streaming codec
+            family for mobile devices, supporting 1.875-6.25 kbps, 24-32 ms algorithmic latency, and 2.8M-18.6M
+            parameters. Temporal Offset Supervision aligns reconstruction with a temporally shifted target, improving
+            causal reconstruction while preserving a competitive quality-latency-bitrate trade-off.
+          </p>
+          <div class="hero-actions" aria-label="Project links">
+            <a class="button primary" href="#audio-3kbps">Listen to demos</a>
+            <a class="button" href="#results">View paper results</a>
+            <a class="button ghost" href="#model-family">Model configs</a>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="TOSS-Codec at a glance">
+          <div class="signal-card">
+            <div class="waveform" aria-hidden="true">
+              <span style="--h: 34%"></span>
+              <span style="--h: 58%"></span>
+              <span style="--h: 82%"></span>
+              <span style="--h: 49%"></span>
+              <span style="--h: 71%"></span>
+              <span style="--h: 39%"></span>
+              <span style="--h: 90%"></span>
+              <span style="--h: 64%"></span>
+              <span style="--h: 45%"></span>
+              <span style="--h: 77%"></span>
+              <span style="--h: 52%"></span>
+              <span style="--h: 87%"></span>
+            </div>
+            <dl class="hero-stats">
+              <div>
+                <dt>Bitrates</dt>
+                <dd>1.875-6.25 kbps</dd>
+              </div>
+              <div>
+                <dt>Latency</dt>
+                <dd>24-32 ms</dd>
+              </div>
+              <div>
+                <dt>Parameters</dt>
+                <dd>2.81M-18.6M</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell intro-grid" id="innovation">
+        <div>
+          <p class="eyebrow">Method</p>
+          <h2>Delayed causal reconstruction without architectural lookahead.</h2>
+          <p>
+            TOSS changes the temporal alignment of the training objective rather than the codec architecture. The
+            encoder and decoder remain strictly causal, while a specified output delay <code>D_T</code> lets the model
+            learn a better delay-quality operating point.
+          </p>
+        </div>
+        <div class="innovation-cards">
+          <article>
+            <span>01</span>
+            <h3>Temporal Offset Supervision</h3>
+            <p>Supervise <code>x_hat[t + D_T]</code> with <code>x[t]</code>; <code>D_T=0</code> recovers ordinary sample-aligned training.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Strictly causal streaming</h3>
+            <p>All convolutional operations use only current and past samples, with chunk-wise state caching and overlap-add.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Scalable RVQ bitrate</h3>
+            <p>With <code>K=1024</code>, <code>fs=16 kHz</code>, and hop size <code>H=256</code>, each active quantizer contributes 0.625 kbps.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Mobile-oriented model family</h3>
+            <p>Tiny, Small, and Base cover 2.81M, 4.83M, and 18.6M parameter operating points.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell method-section" aria-labelledby="method-title">
+        <div class="section-heading">
+          <p class="eyebrow">Codec pipeline</p>
+          <h2 id="method-title">Causal encoder, RVQ, causal decoder, TOSS alignment.</h2>
+        </div>
+        <div class="pipeline" role="img" aria-label="Input waveform to causal encoder, residual vector quantization, causal decoder, temporal offset supervision, and reconstructed audio.">
+          <div class="pipeline-node">Input waveform</div>
+          <div class="pipeline-arrow"></div>
+          <div class="pipeline-node accent">Causal encoder</div>
+          <div class="pipeline-arrow"></div>
+          <div class="pipeline-node">RVQ codes</div>
+          <div class="pipeline-arrow"></div>
+          <div class="pipeline-node accent">Causal decoder</div>
+          <div class="pipeline-arrow"></div>
+          <div class="pipeline-node strong">TOSS: shift by D_T</div>
+          <div class="pipeline-arrow"></div>
+          <div class="pipeline-node">Reconstruction</div>
+        </div>
+      </section>
+
+      <section class="section-shell" id="results">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Paper results</p>
+            <h2>Objective quality, temporal offset, and streaming efficiency.</h2>
+          </div>
+          <p>
+            Results below are condensed from <code>LaCodec.tex</code>. Metrics are reported on LibriSpeech test-clean unless noted.
+            Lower is better for WER, MCD, and RTF; higher is better for PESQ, STOI, and UTMOS.
+          </p>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric-card highlighted">
+            <span>3.125 kbps TOSS-Base</span>
+            <strong>PESQ 2.587</strong>
+            <p>WER 6.52%, STOI 0.923, UTMOS 3.272, MCD 3.520 at 32 ms latency.</p>
+          </article>
+          <article class="metric-card highlighted">
+            <span>6.25 kbps TOSS-Base</span>
+            <strong>PESQ 3.552</strong>
+            <p>STOI 0.962, UTMOS 3.778, MCD 2.529; best among streaming/chunk-wise systems for reconstruction metrics.</p>
+          </article>
+          <article class="metric-card">
+            <span>TOSS offset</span>
+            <strong>0 -> 16 ms</strong>
+            <p>At 6.25 kbps, PESQ improves from 1.887 to 3.552 and MCD decreases from 3.307 to 2.529.</p>
+          </article>
+          <article class="metric-card">
+            <span>CPU streaming</span>
+            <strong>RTF 0.139</strong>
+            <p>TOSS-Tiny at 3.125 kbps runs at 7.19x real time with 20 ms chunks and one CPU thread.</p>
+          </article>
+        </div>
+
+        <div class="table-scroll result-table">
+          <table class="model-table">
+            <caption>Streaming or chunk-wise comparison around 6 kbps on LibriSpeech test-clean.</caption>
+            <thead>
+              <tr>
+                <th>System</th>
+                <th>Mode</th>
+                <th>Params</th>
+                <th>R</th>
+                <th>Latency</th>
+                <th>WER</th>
+                <th>PESQ</th>
+                <th>STOI</th>
+                <th>UTMOS</th>
+                <th>MCD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>EnCodec 24k</td><td>S/C</td><td>23.3M</td><td>6.0</td><td>--</td><td>6.23</td><td>2.723</td><td>0.937</td><td>3.042</td><td>3.862</td></tr>
+              <tr><td>AudioDec</td><td>S/C</td><td>27.4M</td><td>6.4</td><td>--</td><td>6.51</td><td>2.011</td><td>0.821</td><td>3.270</td><td>3.378</td></tr>
+              <tr><td>Lyra</td><td>S/C</td><td>--</td><td>6.0</td><td>--</td><td><strong>5.14</strong></td><td>2.916</td><td>0.931</td><td>3.437</td><td>3.400</td></tr>
+              <tr><td>TOSS-Tiny</td><td>S/C</td><td>2.81M</td><td>6.25</td><td>32</td><td>6.12</td><td>2.978</td><td>0.943</td><td>3.373</td><td>3.145</td></tr>
+              <tr><td>TOSS-Small</td><td>S/C</td><td>4.83M</td><td>6.25</td><td>32</td><td>5.70</td><td>3.261</td><td>0.952</td><td>3.597</td><td>2.896</td></tr>
+              <tr><td><strong>TOSS-Base</strong></td><td>S/C</td><td>18.6M</td><td>6.25</td><td>32</td><td>5.32</td><td><strong>3.552</strong></td><td><strong>0.962</strong></td><td><strong>3.778</strong></td><td><strong>2.529</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll result-table">
+          <table class="model-table">
+            <caption>Streaming comparison around 3 kbps on LibriSpeech test-clean.</caption>
+            <thead>
+              <tr>
+                <th>System</th>
+                <th>Mode</th>
+                <th>Params</th>
+                <th>R</th>
+                <th>Latency</th>
+                <th>WER</th>
+                <th>PESQ</th>
+                <th>STOI</th>
+                <th>UTMOS</th>
+                <th>MCD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>EnCodec 24k</td><td>S/C</td><td>23.3M</td><td>3.0</td><td>--</td><td>7.12</td><td>2.053</td><td>0.898</td><td>2.304</td><td>4.647</td></tr>
+              <tr><td>Lyra</td><td>S/C</td><td>--</td><td>3.2</td><td>--</td><td>6.55</td><td>2.352</td><td>0.901</td><td>2.966</td><td>3.968</td></tr>
+              <tr><td>TOSS-Tiny</td><td>S/C</td><td>2.81M</td><td>3.125</td><td>32</td><td>7.61</td><td>2.094</td><td>0.892</td><td>2.465</td><td>4.062</td></tr>
+              <tr><td>TOSS-Small</td><td>S/C</td><td>4.83M</td><td>3.125</td><td>32</td><td>7.35</td><td>2.330</td><td>0.908</td><td>2.881</td><td>3.796</td></tr>
+              <tr><td><strong>TOSS-Base</strong></td><td>S/C</td><td>18.6M</td><td>3.125</td><td>32</td><td><strong>6.52</strong></td><td><strong>2.587</strong></td><td><strong>0.923</strong></td><td><strong>3.272</strong></td><td><strong>3.520</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-scroll result-table">
+          <table class="model-table">
+            <caption>Temporal-offset ablation on TOSS-Base.</caption>
+            <thead>
+              <tr>
+                <th>D_T</th>
+                <th>R</th>
+                <th>WER</th>
+                <th>PESQ</th>
+                <th>STOI</th>
+                <th>UTMOS</th>
+                <th>MCD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0 ms</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
+              <tr><td>8 ms</td><td>6.25</td><td><strong>5.22</strong></td><td>2.457</td><td>0.923</td><td>3.508</td><td>2.976</td></tr>
+              <tr><td>16 ms</td><td>6.25</td><td>5.32</td><td><strong>3.552</strong></td><td><strong>0.962</strong></td><td><strong>3.778</strong></td><td><strong>2.529</strong></td></tr>
+              <tr><td>0 ms</td><td>3.125</td><td>7.67</td><td>1.753</td><td>0.821</td><td>2.916</td><td>3.876</td></tr>
+              <tr><td>8 ms</td><td>3.125</td><td><strong>6.50</strong></td><td>2.067</td><td>0.890</td><td>3.079</td><td>3.732</td></tr>
+              <tr><td>16 ms</td><td>3.125</td><td>6.52</td><td><strong>2.587</strong></td><td><strong>0.923</strong></td><td><strong>3.272</strong></td><td><strong>3.520</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="audio-nav section-shell" aria-label="Audio demo shortcuts">
+        <a href="#audio-3kbps">3 kbps baselines</a>
+        <a href="#audio-6kbps">6 kbps baselines</a>
+        <a href="#model-family">TOSS model family</a>
+      </section>
+
+      <section class="section-shell audio-section" id="audio-3kbps">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Audio demo A</p>
+            <h2>3 kbps comparison</h2>
+          </div>
+          <p>
+            Listen to the 3.125 kbps TOSS-Base reconstruction against low-bitrate codec baselines and reference systems.
+            Keep all systems loudness-normalized and sample-aligned.
+          </p>
+        </div>
+        <div class="audio-table-wrap" data-demo-section="threeKbps"></div>
+      </section>
+
+      <section class="section-shell audio-section" id="audio-6kbps">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Audio demo B</p>
+            <h2>6 kbps comparison</h2>
+          </div>
+          <p>
+            Listen to the 6.25 kbps TOSS-Base reconstruction against streaming EnCodec, AudioDec, and Lyra-style baselines.
+          </p>
+        </div>
+        <div class="audio-table-wrap" data-demo-section="sixKbps"></div>
+      </section>
+
+      <section class="section-shell audio-section" id="model-family">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow">Audio demo C</p>
+            <h2>TOSS Base / Small / Tiny</h2>
+          </div>
+          <p>
+            This section highlights the quality-efficiency trade-off across 18.6M, 4.83M, and 2.81M parameter models.
+          </p>
+        </div>
+        <div class="audio-table-wrap" data-demo-section="modelFamily"></div>
+      </section>
+
+      <section class="section-shell model-table-section">
+        <div class="section-heading">
+          <p class="eyebrow">Model family</p>
+          <h2>Model configurations from the paper.</h2>
+        </div>
+        <div class="table-scroll">
+          <table class="model-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>d0</th>
+                <th>Decoder dim</th>
+                <th>Latent dim</th>
+                <th>Params</th>
+                <th>Supported bitrate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TOSS-Tiny</td>
+                <td>12</td>
+                <td>288</td>
+                <td>192</td>
+                <td>2.81M</td>
+                <td>1.875-6.25 kbps</td>
+              </tr>
+              <tr>
+                <td>TOSS-Small</td>
+                <td>16</td>
+                <td>384</td>
+                <td>256</td>
+                <td>4.83M</td>
+                <td>1.875-6.25 kbps</td>
+              </tr>
+              <tr>
+                <td>TOSS-Base</td>
+                <td>32</td>
+                <td>768</td>
+                <td>512</td>
+                <td>18.6M</td>
+                <td>1.875-6.25 kbps</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Demo page based on <code>LaCodec.tex</code>. Replace placeholder audio paths in
+        <code>assets/js/demo-data.js</code> before public release.
+      </p>
+    </footer>
+
+    <script src="assets/js/demo-data.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
