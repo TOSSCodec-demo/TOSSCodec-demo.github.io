@@ -1,13 +1,15 @@
 # TOSS-Codec Demo Page
 
-This directory contains a static GitHub Pages-style demo page.
+Demo page for TOSS-Codec: low-bitrate streaming neural audio codec with Temporal Offset Supervision.
+
+This repository contains a static GitHub Pages-style demo page based on the paper "TOSS: Temporal Offset Supervision for Low-Bitrate Streaming Audio Codecs on Mobile Devices".
 
 ## Preview locally
 
-From the repository root:
+From this repository root:
 
 ```bash
-python3 -m http.server 8000 --directory demo
+python3 -m http.server 8000
 ```
 
 Then open `http://localhost:8000`.
