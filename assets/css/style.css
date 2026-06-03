@@ -509,6 +509,28 @@ table {
   margin-top: 16px;
 }
 
+.paper-table {
+  min-width: 980px;
+}
+
+.compact-table {
+  min-width: 720px;
+}
+
+.group-row td {
+  color: var(--fg-muted);
+  background: var(--canvas-subtle);
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.table-note {
+  margin: 8px 0 18px;
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
 th,
 td {
   padding: 12px 16px;

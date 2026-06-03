@@ -8,7 +8,7 @@
       content="TOSS-Codec demo page based on the paper TOSS: Temporal Offset Supervision for Low-Bitrate Streaming Audio Codecs on Mobile Devices."
     />
     <title>TOSS-Codec Demo</title>
-    <link rel="stylesheet" href="assets/css/style.css?v=5" />
+    <link rel="stylesheet" href="assets/css/style.css?v=6" />
   </head>
   <body>
     <header class="site-header">
@@ -135,116 +135,195 @@
         <div class="section-heading split-heading">
           <div>
             <p class="eyebrow">Paper results</p>
-            <h2>Objective quality, temporal offset, and streaming efficiency.</h2>
+            <h2>Objective quality, temporal offset, low bitrate, and streaming efficiency.</h2>
           </div>
           <p>
-            Results below are condensed from <code>LaCodec.tex</code>. Metrics are reported on LibriSpeech test-clean unless noted.
-            Lower is better for WER, MCD, and RTF; higher is better for PESQ, STOI, and UTMOS.
+            The following tables follow the original paper tables in <code>LaCodec.tex</code>. Metrics are reported on
+            LibriSpeech test-clean unless otherwise specified. Lower is better for WER, MCD, and RTF; higher is better
+            for PESQ, STOI, UTMOS, and Speed.
           </p>
         </div>
 
-        <div class="metric-grid">
-          <article class="metric-card highlighted">
-            <span>3.125 kbps TOSS-Base</span>
-            <strong>PESQ 2.587</strong>
-            <p>WER 6.52%, STOI 0.923, UTMOS 3.272, MCD 3.520 at 32 ms latency.</p>
-          </article>
-          <article class="metric-card highlighted">
-            <span>6.25 kbps TOSS-Base</span>
-            <strong>PESQ 3.552</strong>
-            <p>STOI 0.962, UTMOS 3.778, MCD 2.529; best among streaming/chunk-wise systems for reconstruction metrics.</p>
-          </article>
-          <article class="metric-card">
-            <span>TOSS offset</span>
-            <strong>0 -> 16 ms</strong>
-            <p>At 6.25 kbps, PESQ improves from 1.887 to 3.552 and MCD decreases from 3.307 to 2.529.</p>
-          </article>
-          <article class="metric-card">
-            <span>CPU streaming</span>
-            <strong>RTF 0.139</strong>
-            <p>TOSS-Tiny at 3.125 kbps runs at 7.19x real time with 20 ms chunks and one CPU thread.</p>
-          </article>
-        </div>
-
         <div class="table-scroll result-table">
-          <table class="model-table">
-            <caption>Streaming or chunk-wise comparison around 6 kbps on LibriSpeech test-clean.</caption>
+          <table class="model-table paper-table">
+            <caption>Objective comparison at around 6 kbps on LibriSpeech test-clean.</caption>
             <thead>
               <tr>
                 <th>System</th>
                 <th>Mode</th>
                 <th>Params</th>
-                <th>R</th>
-                <th>Latency</th>
-                <th>WER</th>
-                <th>PESQ</th>
-                <th>STOI</th>
-                <th>UTMOS</th>
-                <th>MCD</th>
+                <th>R (kbps)</th>
+                <th>Latency (ms)</th>
+                <th>WER ↓ (%)</th>
+                <th>PESQ ↑</th>
+                <th>STOI ↑</th>
+                <th>UTMOS ↑</th>
+                <th>MCD ↓</th>
               </tr>
             </thead>
             <tbody>
+              <tr class="group-row"><td colspan="10">Streaming or chunk-wise systems</td></tr>
               <tr><td>EnCodec 24k</td><td>S/C</td><td>23.3M</td><td>6.0</td><td>--</td><td>6.23</td><td>2.723</td><td>0.937</td><td>3.042</td><td>3.862</td></tr>
+              <tr><td>EnCodec 48k</td><td>Ch/N</td><td>19.1M</td><td>6.0</td><td>--</td><td>7.35</td><td>2.122</td><td>0.902</td><td>2.405</td><td>4.549</td></tr>
               <tr><td>AudioDec</td><td>S/C</td><td>27.4M</td><td>6.4</td><td>--</td><td>6.51</td><td>2.011</td><td>0.821</td><td>3.270</td><td>3.378</td></tr>
               <tr><td>Lyra</td><td>S/C</td><td>--</td><td>6.0</td><td>--</td><td><strong>5.14</strong></td><td>2.916</td><td>0.931</td><td>3.437</td><td>3.400</td></tr>
               <tr><td>TOSS-Tiny</td><td>S/C</td><td>2.81M</td><td>6.25</td><td>32</td><td>6.12</td><td>2.978</td><td>0.943</td><td>3.373</td><td>3.145</td></tr>
               <tr><td>TOSS-Small</td><td>S/C</td><td>4.83M</td><td>6.25</td><td>32</td><td>5.70</td><td>3.261</td><td>0.952</td><td>3.597</td><td>2.896</td></tr>
               <tr><td><strong>TOSS-Base</strong></td><td>S/C</td><td>18.6M</td><td>6.25</td><td>32</td><td>5.32</td><td><strong>3.552</strong></td><td><strong>0.962</strong></td><td><strong>3.778</strong></td><td><strong>2.529</strong></td></tr>
+              <tr class="group-row"><td colspan="10">Full-utterance or offline reference systems</td></tr>
+              <tr><td>EnCodec 24k</td><td>F/C</td><td>23.3M</td><td>6.0</td><td>--</td><td>6.33</td><td>2.766</td><td>0.938</td><td>3.087</td><td>3.857</td></tr>
+              <tr><td>AudioDec</td><td>F/C</td><td>27.4M</td><td>6.4</td><td>--</td><td>5.97</td><td>2.010</td><td>0.821</td><td>3.278</td><td>3.361</td></tr>
+              <tr><td>DAC 16 kHz</td><td>F/NC</td><td>74.2M</td><td>6.0</td><td>--</td><td>3.53</td><td>4.019</td><td>0.975</td><td>4.030</td><td>2.159</td></tr>
+              <tr><td>DAC 24 kHz</td><td>F/NC</td><td>74.7M</td><td>6.0</td><td>--</td><td>6.93</td><td>3.470</td><td>0.954</td><td>3.678</td><td>2.861</td></tr>
+              <tr><td>DAC 44 kHz</td><td>F/NC</td><td>76.7M</td><td>6.0</td><td>--</td><td>6.27</td><td>3.585</td><td>0.959</td><td>3.849</td><td>2.931</td></tr>
+              <tr><td>WavTokenizer-s600</td><td>F/NC</td><td>80.9M</td><td>~6.6</td><td>--</td><td>18.50</td><td>1.624</td><td>0.848</td><td>3.574</td><td>5.106</td></tr>
+              <tr><td>WavTokenizer-s320</td><td>F/NC</td><td>80.6M</td><td>~6.6</td><td>--</td><td>9.46</td><td>2.130</td><td>0.897</td><td>3.792</td><td>4.078</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="table-note">
+          S/C denotes streaming causal inference, Ch/N denotes chunk-wise non-causal inference, F/C denotes
+          full-utterance causal inference, and F/NC denotes full-utterance non-causal inference. For TOSS models,
+          the reported latency is the total algorithmic latency in the main configuration with <code>D_T=16 ms</code>.
+          Bold values indicate the best result among streaming or chunk-wise systems; full-utterance and offline
+          systems are shown only as references.
+        </p>
 
         <div class="table-scroll result-table">
-          <table class="model-table">
-            <caption>Streaming comparison around 3 kbps on LibriSpeech test-clean.</caption>
+          <table class="model-table paper-table">
+            <caption>Objective comparison at around 3 kbps on LibriSpeech test-clean.</caption>
             <thead>
               <tr>
                 <th>System</th>
                 <th>Mode</th>
                 <th>Params</th>
-                <th>R</th>
-                <th>Latency</th>
-                <th>WER</th>
-                <th>PESQ</th>
-                <th>STOI</th>
-                <th>UTMOS</th>
-                <th>MCD</th>
+                <th>R (kbps)</th>
+                <th>Latency (ms)</th>
+                <th>WER ↓ (%)</th>
+                <th>PESQ ↑</th>
+                <th>STOI ↑</th>
+                <th>UTMOS ↑</th>
+                <th>MCD ↓</th>
               </tr>
             </thead>
             <tbody>
+              <tr class="group-row"><td colspan="10">Streaming or chunk-wise systems</td></tr>
               <tr><td>EnCodec 24k</td><td>S/C</td><td>23.3M</td><td>3.0</td><td>--</td><td>7.12</td><td>2.053</td><td>0.898</td><td>2.304</td><td>4.647</td></tr>
               <tr><td>Lyra</td><td>S/C</td><td>--</td><td>3.2</td><td>--</td><td>6.55</td><td>2.352</td><td>0.901</td><td>2.966</td><td>3.968</td></tr>
               <tr><td>TOSS-Tiny</td><td>S/C</td><td>2.81M</td><td>3.125</td><td>32</td><td>7.61</td><td>2.094</td><td>0.892</td><td>2.465</td><td>4.062</td></tr>
               <tr><td>TOSS-Small</td><td>S/C</td><td>4.83M</td><td>3.125</td><td>32</td><td>7.35</td><td>2.330</td><td>0.908</td><td>2.881</td><td>3.796</td></tr>
               <tr><td><strong>TOSS-Base</strong></td><td>S/C</td><td>18.6M</td><td>3.125</td><td>32</td><td><strong>6.52</strong></td><td><strong>2.587</strong></td><td><strong>0.923</strong></td><td><strong>3.272</strong></td><td><strong>3.520</strong></td></tr>
+              <tr class="group-row"><td colspan="10">Full-utterance or offline reference systems</td></tr>
+              <tr><td>HILCodec</td><td>F/C</td><td>63.0M</td><td>3.0</td><td>--</td><td>6.77</td><td>2.798</td><td>0.935</td><td>3.643</td><td>3.668</td></tr>
+              <tr><td>SpeechTokenizer</td><td>F/--</td><td>120M</td><td>~4.0</td><td>--</td><td>5.59</td><td>2.604</td><td>0.921</td><td>3.904</td><td>3.608</td></tr>
+              <tr><td>EnCodec 24k</td><td>F/C</td><td>23.3M</td><td>3.0</td><td>--</td><td>6.96</td><td>2.097</td><td>0.900</td><td>2.354</td><td>4.612</td></tr>
+              <tr><td>HiFi-Codec 24k-320d</td><td>F/NC</td><td>63.6M</td><td>3.0</td><td>--</td><td>7.23</td><td>2.651</td><td>0.931</td><td>3.709</td><td>3.455</td></tr>
+              <tr><td>DAC 16 kHz</td><td>F/NC</td><td>74.2M</td><td>3.0</td><td>--</td><td>6.22</td><td>2.099</td><td>0.911</td><td>2.863</td><td>3.559</td></tr>
+              <tr><td>DAC 24 kHz</td><td>F/NC</td><td>74.7M</td><td>3.0</td><td>--</td><td>8.44</td><td>2.399</td><td>0.908</td><td>2.963</td><td>3.919</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="table-note">
+          S/C denotes streaming causal inference, F/C denotes full-utterance causal inference, and F/NC denotes
+          full-utterance non-causal inference. For the proposed models, the reported latency is the total algorithmic
+          latency in the main configuration with <code>D_T=16 ms</code>. Bold values indicate the best result among
+          streaming systems; full-utterance and offline systems are shown only as references.
+        </p>
 
         <div class="table-scroll result-table">
-          <table class="model-table">
+          <table class="model-table paper-table compact-table">
             <caption>Temporal-offset ablation on TOSS-Base.</caption>
             <thead>
               <tr>
-                <th>D_T</th>
-                <th>R</th>
-                <th>WER</th>
-                <th>PESQ</th>
-                <th>STOI</th>
-                <th>UTMOS</th>
-                <th>MCD</th>
+                <th>D_T (ms)</th>
+                <th>R (kbps)</th>
+                <th>WER ↓</th>
+                <th>PESQ ↑</th>
+                <th>STOI ↑</th>
+                <th>UTMOS ↑</th>
+                <th>MCD ↓</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>0 ms</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
-              <tr><td>8 ms</td><td>6.25</td><td><strong>5.22</strong></td><td>2.457</td><td>0.923</td><td>3.508</td><td>2.976</td></tr>
-              <tr><td>16 ms</td><td>6.25</td><td>5.32</td><td><strong>3.552</strong></td><td><strong>0.962</strong></td><td><strong>3.778</strong></td><td><strong>2.529</strong></td></tr>
-              <tr><td>0 ms</td><td>3.125</td><td>7.67</td><td>1.753</td><td>0.821</td><td>2.916</td><td>3.876</td></tr>
-              <tr><td>8 ms</td><td>3.125</td><td><strong>6.50</strong></td><td>2.067</td><td>0.890</td><td>3.079</td><td>3.732</td></tr>
-              <tr><td>16 ms</td><td>3.125</td><td>6.52</td><td><strong>2.587</strong></td><td><strong>0.923</strong></td><td><strong>3.272</strong></td><td><strong>3.520</strong></td></tr>
+              <tr><td>0</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
+              <tr><td>4</td><td>6.25</td><td>5.66</td><td>1.974</td><td>0.884</td><td>3.255</td><td>3.202</td></tr>
+              <tr><td>8</td><td>6.25</td><td><strong>5.22</strong></td><td>2.457</td><td>0.923</td><td>3.508</td><td>2.976</td></tr>
+              <tr><td>16</td><td>6.25</td><td>5.32</td><td><strong>3.552</strong></td><td><strong>0.962</strong></td><td><strong>3.778</strong></td><td><strong>2.529</strong></td></tr>
+              <tr><td>0</td><td>3.125</td><td>7.67</td><td>1.753</td><td>0.821</td><td>2.916</td><td>3.876</td></tr>
+              <tr><td>4</td><td>3.125</td><td>7.03</td><td>1.807</td><td>0.858</td><td>2.890</td><td>3.829</td></tr>
+              <tr><td>8</td><td>3.125</td><td><strong>6.50</strong></td><td>2.067</td><td>0.890</td><td>3.079</td><td>3.732</td></tr>
+              <tr><td>16</td><td>3.125</td><td>6.52</td><td><strong>2.587</strong></td><td><strong>0.923</strong></td><td><strong>3.272</strong></td><td><strong>3.520</strong></td></tr>
             </tbody>
           </table>
         </div>
+        <p class="table-note">
+          <code>D_T=0</code> denotes standard sample-aligned supervision. Bold values indicate the best result within each bitrate group.
+        </p>
+
+        <div class="table-scroll result-table">
+          <table class="model-table paper-table">
+            <caption>Low-bitrate comparison on LibriSpeech test-clean.</caption>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>R (kbps)</th>
+                <th>D_T (ms)</th>
+                <th>S/C</th>
+                <th>Params</th>
+                <th>WER ↓ (%)</th>
+                <th>PESQ ↑</th>
+                <th>STOI ↑</th>
+                <th>UTMOS ↑</th>
+                <th>MCD ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-row"><td colspan="10">Proposed low-bitrate streaming codecs with TOSS</td></tr>
+              <tr><td><strong>TOSS-Base</strong></td><td>1.875</td><td>16</td><td>Y/Y</td><td>18.6M</td><td><strong>8.82</strong></td><td><strong>1.927</strong></td><td><strong>0.885</strong></td><td><strong>2.613</strong></td><td><strong>4.246</strong></td></tr>
+              <tr><td>TOSS-Small</td><td>1.875</td><td>16</td><td>Y/Y</td><td>4.83M</td><td>9.26</td><td>1.674</td><td>0.860</td><td>1.976</td><td>4.486</td></tr>
+              <tr class="group-row"><td colspan="10">Large-scale low-bitrate reference systems</td></tr>
+              <tr><td>Mimi</td><td>1.1</td><td>--</td><td>Y/Y</td><td>96.2M</td><td>6.10</td><td>3.405</td><td>0.958</td><td>3.894</td><td>3.379</td></tr>
+              <tr><td>BigCodec</td><td>1.04</td><td>--</td><td>Y/--</td><td>159M</td><td>6.36</td><td>2.580</td><td>0.930</td><td>4.029</td><td>3.553</td></tr>
+              <tr><td>FocalCodec-stream</td><td>0.60</td><td>--</td><td>Y/Y</td><td>249M</td><td>11.02</td><td>1.251</td><td>0.808</td><td>3.864</td><td>5.336</td></tr>
+              <tr><td>MagiCodec</td><td>~0.85</td><td>--</td><td>N/N</td><td>210M</td><td>26.77</td><td>1.258</td><td>0.755</td><td>1.685</td><td>5.964</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          R denotes bitrate, <code>D_T</code> denotes the TOSS offset, and S/C denotes streaming/causal inference.
+          Bold values in the proposed block indicate the better result between TOSS-Base and TOSS-Small.
+        </p>
+
+        <div class="table-scroll result-table">
+          <table class="model-table paper-table compact-table">
+            <caption>CPU streaming RTF on LibriSpeech test-clean.</caption>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>SR (kHz)</th>
+                <th>Bitrate (kbps)</th>
+                <th>Config.</th>
+                <th>RTF ↓</th>
+                <th>Speed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>AudioDec</td><td>24</td><td>6.4</td><td><code>libritts_sym</code></td><td>0.251</td><td>3.98x</td></tr>
+              <tr><td>EnCodec</td><td>24</td><td>6.0</td><td>6 kbps target</td><td>0.302</td><td>3.31x</td></tr>
+              <tr><td><strong>TOSS-Tiny</strong></td><td>16</td><td>3.125</td><td><code>n_q=5</code></td><td><strong>0.139</strong></td><td><strong>7.19x</strong></td></tr>
+              <tr><td>TOSS-Tiny</td><td>16</td><td>6.25</td><td><code>n_q=10</code></td><td>0.158</td><td>6.35x</td></tr>
+              <tr><td>TOSS-Small</td><td>16</td><td>3.125</td><td><code>n_q=5</code></td><td>0.187</td><td>5.34x</td></tr>
+              <tr><td>TOSS-Small</td><td>16</td><td>6.25</td><td><code>n_q=10</code></td><td>0.204</td><td>4.91x</td></tr>
+              <tr><td>TOSS-Base</td><td>16</td><td>3.125</td><td><code>n_q=5</code></td><td>0.408</td><td>2.45x</td></tr>
+              <tr><td>TOSS-Base</td><td>16</td><td>6.25</td><td><code>n_q=10</code></td><td>0.445</td><td>2.25x</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          RTF is measured with streaming encode-decode execution using 20 ms chunks and one CPU thread. For the proposed
+          models, delay256 corresponds to <code>D_T=16 ms</code> at 16 kHz. Rows are not rate-matched and should be interpreted
+          as implementation-efficiency references.
+        </p>
       </section>
 
       <section class="audio-nav section-shell" aria-label="Audio demo shortcuts">
