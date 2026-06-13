@@ -35,9 +35,9 @@
           <h1>TOSS-Codec: A Temporal-Offset-Supervised Streaming Audio Codec for Mobile Devices</h1>
           <p class="hero-lede">
             TOSS-Codec is a compact family of fully causal streaming neural audio codecs for device-oriented audio
-            compression and transmission. Temporal Offset Supervision turns a small explicit output delay into a
-            supervision offset, improving causal reconstruction quality while keeping the inference architecture
-            unchanged and the latency budget controllable.
+            compression and transmission. Temporal Offset Supervision supervises a delayed causal reconstruction with
+            an earlier ground-truth target, turning a small explicit output delay into a controllable quality-latency
+            trade-off while keeping the inference architecture unchanged.
           </p>
           <div class="hero-actions" aria-label="Project links">
             <a class="button primary" href="#audio-3kbps">Listen to demos</a>
@@ -86,8 +86,8 @@
             <h2 id="overview-title">Streaming architecture and Temporal Offset Supervision at a glance.</h2>
           </div>
           <p>
-            This figure summarizes the strictly causal encoder-RVQ-decoder pipeline, TOSS training alignment, and
-            causal streaming inference with explicit output delay.
+            This figure summarizes the strictly causal encoder-RVQ-decoder pipeline, shifted waveform-loss alignment,
+            and causal streaming inference with explicit output delay and tail padding.
           </p>
         </div>
         <figure class="overview-figure">
@@ -99,8 +99,9 @@
             loading="lazy"
           />
           <figcaption>
-            Overview figure from the final paper: causal codec architecture, delayed supervision, and streaming
-            emission with tail padding to flush the stream.
+            Overview of the proposed TOSS codec: a causal encoder-RVQ-decoder maps 16-kHz audio to low-frame-rate
+            discrete codes, TOSS computes waveform losses on the shifted overlap, and inference realizes the offset
+            as explicit delayed emission.
           </figcaption>
         </figure>
       </section>
@@ -110,10 +111,10 @@
           <p class="eyebrow">Method</p>
           <h2>A causal codec trained to use output delay as supervision.</h2>
           <p>
-            The proposed system is a strictly causal encoder-quantizer-decoder for low-bitrate streaming audio coding.
-            TOSS improves this causal codec by shifting the supervision target in time, so the delay-quality trade-off
-            is controlled by training alignment rather than by adding non-causal layers, explicit lookahead buffers, or
-            extra parameters.
+            The proposed codec is designed for endpoint audio communication: online reconstruction, flexible bitrate
+            adaptation, and compact CPU-friendly inference. TOSS improves the same strictly causal computation graph by
+            changing only the training-time temporal alignment, rather than adding non-causal layers, lookahead buffers,
+            or extra parameters.
           </p>
         </div>
         <div class="innovation-cards">
@@ -147,8 +148,8 @@
             <h2 id="pipeline-title">Causal encoding, scalable RVQ, delayed supervision.</h2>
           </div>
           <p>
-            The transmitted bitstream contains only quantizer indices; bitrate is selected by choosing the number of
-            active residual quantizers at inference time.
+            The transmitted bitstream contains only quantizer indices. Bitrate is selected by choosing the number of
+            active residual quantizers at inference time, and each active quantizer contributes 0.625 kbps at 16 kHz.
           </p>
         </div>
         <div class="pipeline" role="img" aria-label="Input waveform, causal encoder, RVQ indices, causal decoder, TOSS alignment, delayed output.">
@@ -173,9 +174,9 @@
             <h2>Objective quality, temporal offset, and streaming efficiency.</h2>
           </div>
           <p>
-            Metrics are reported on LibriSpeech test-clean unless otherwise specified. <code>Tok/s</code> is the token
-            rate and Frame Rate is the latent frame rate. For all TOSS models in the objective tables, the temporal
-            offset <code>D_T</code> is set to 16 ms.
+            Metrics are reported on LibriSpeech test-clean unless otherwise specified. Baselines are grouped into
+            streaming or chunk-wise systems and full-utterance or offline references. For all TOSS models in the
+            objective tables, the temporal offset <code>D_T</code> is set to 16 ms.
           </p>
         </div>
 
@@ -204,7 +205,6 @@
               <tr><td>DAC 44 kHz</td><td>No</td><td>76.7M</td><td>6.0</td><td>603</td><td>86</td><td>6.27</td><td>3.585</td><td>0.959</td><td>3.849</td><td>2.931</td></tr>
               <tr class="group-row"><td colspan="11">Streaming or chunk-wise systems</td></tr>
               <tr><td>EnCodec 24k</td><td>Yes</td><td>23.3M</td><td>6.0</td><td>600</td><td>75</td><td>6.23</td><td>2.723</td><td>0.937</td><td>3.042</td><td>3.862</td></tr>
-              <tr><td>EnCodec 48k</td><td>Yes</td><td>19.1M</td><td>6.0</td><td>600</td><td>150</td><td>7.35</td><td>2.122</td><td>0.902</td><td>2.405</td><td>4.549</td></tr>
               <tr><td>AudioDec</td><td>Yes</td><td>27.4M</td><td>6.4</td><td>640</td><td>80</td><td>6.51</td><td>2.011</td><td>0.821</td><td>3.270</td><td>3.378</td></tr>
               <tr><td>Lyra-v2</td><td>Yes</td><td>--</td><td>6.0</td><td>1500</td><td>50</td><td><strong>5.14</strong></td><td>2.916</td><td>0.931</td><td>3.437</td><td>3.400</td></tr>
               <tr><td>TOSS-Tiny</td><td>Yes</td><td>2.81M</td><td>6.25</td><td>625</td><td>62.5</td><td>6.12</td><td>2.978</td><td>0.943</td><td>3.373</td><td>3.145</td></tr>
@@ -259,9 +259,10 @@
 
         <div class="table-scroll result-table" id="offset-ablation">
           <table class="model-table paper-table compact-table">
-            <caption>Temporal-offset ablation on TOSS-Base.</caption>
+            <caption>Temporal-offset ablation.</caption>
             <thead>
               <tr>
+                <th>System</th>
                 <th>D_T (ms)</th>
                 <th>R (kbps)</th>
                 <th>WER ↓</th>
@@ -272,16 +273,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>0 (w/o TOSS)</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
-              <tr><td>4</td><td>6.25</td><td>5.66</td><td>1.974</td><td>0.884</td><td>3.255</td><td>3.202</td></tr>
-              <tr><td>8</td><td>6.25</td><td><strong>5.22</strong></td><td>2.457</td><td>0.923</td><td>3.508</td><td>2.976</td></tr>
-              <tr><td>16</td><td>6.25</td><td>5.32</td><td>3.552</td><td>0.962</td><td>3.778</td><td>2.529</td></tr>
-              <tr><td>32</td><td>6.25</td><td>5.73</td><td><strong>3.706</strong></td><td><strong>0.964</strong></td><td><strong>3.824</strong></td><td><strong>2.463</strong></td></tr>
+              <tr class="group-row"><td colspan="8">Ours</td></tr>
+              <tr><td>TOSS-Base</td><td>0</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
+              <tr><td>TOSS-Base</td><td>4</td><td>6.25</td><td>5.66</td><td>1.974</td><td>0.884</td><td>3.255</td><td>3.202</td></tr>
+              <tr><td>TOSS-Base</td><td>8</td><td>6.25</td><td><strong>5.22</strong></td><td>2.457</td><td>0.923</td><td>3.508</td><td>2.976</td></tr>
+              <tr><td>TOSS-Base</td><td>16</td><td>6.25</td><td>5.32</td><td>3.552</td><td>0.962</td><td>3.778</td><td>2.529</td></tr>
+              <tr><td>TOSS-Base</td><td>32</td><td>6.25</td><td>5.73</td><td><strong>3.706</strong></td><td><strong>0.964</strong></td><td><strong>3.824</strong></td><td><strong>2.463</strong></td></tr>
+              <tr class="group-row"><td colspan="8">EnCodec 24 kHz</td></tr>
+              <tr><td>EnCodec</td><td>0</td><td>6.0</td><td><strong>6.23</strong></td><td>2.723</td><td>0.937</td><td>3.042</td><td>3.862</td></tr>
+              <tr><td>EnCodec+TOSS</td><td>13.3</td><td>6.0</td><td>6.79</td><td><strong>3.256</strong></td><td><strong>0.949</strong></td><td><strong>3.524</strong></td><td><strong>3.025</strong></td></tr>
             </tbody>
           </table>
         </div>
         <p class="table-note">
-          <code>D_T=0</code> denotes standard sample-aligned supervision. Bold values indicate the best result within each bitrate group.
+          <code>D_T=0</code> denotes standard sample-aligned supervision without temporal offset. The upper block studies
+          different temporal offsets on TOSS-Base, while the lower block verifies whether the same supervision strategy
+          can also improve an external streaming codec. Bold values indicate the best result within each block.
         </p>
 
         <div class="result-figure" id="training-stability">
@@ -305,7 +312,8 @@
             />
             <figcaption>
               Validation Mel loss under different temporal offsets. Larger offsets consistently reduce validation Mel
-              loss, and all curves decrease smoothly.
+              loss, and all curves decrease smoothly, indicating that Temporal Offset Supervision does not introduce
+              evident optimization instability.
             </figcaption>
           </figure>
         </div>
@@ -334,9 +342,11 @@
           </table>
         </div>
         <p class="table-note">
-          RTF is measured with streaming encode-decode execution using 32 ms input frames and one CPU thread. For TOSS models,
-          <code>D_T=256</code> samples corresponds to 16 ms at 16 kHz. Rows differ in sampling rate, bitrate, and official
-          implementation, so this table should be interpreted as an implementation-efficiency reference rather than a strictly rate-matched comparison.
+          RTF is measured as duration-weighted wall-clock inference time divided by input duration, excluding model
+          loading and disk I/O. TOSS models are evaluated with 16-ms frames, i.e., 256 samples at 16 kHz, using
+          <code>N_q=10</code> and one CPU thread. Rows differ in sampling rate, bitrate, frame configuration, and
+          implementation backend, so this table should be interpreted as an implementation-efficiency reference rather
+          than a strictly rate-matched comparison.
         </p>
       </section>
 
