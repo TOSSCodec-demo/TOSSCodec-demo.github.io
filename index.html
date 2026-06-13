@@ -22,6 +22,7 @@
         <a href="#results">Results</a>
         <a href="#offset-ablation">Ablation</a>
         <a href="#training-stability">Stability</a>
+        <a href="#rtf-mushra">RTF/MUSHRA</a>
         <a href="#audio-3kbps">3 kbps</a>
         <a href="#audio-6kbps">6 kbps</a>
         <a href="#model-family">Model Family</a>
@@ -171,12 +172,12 @@
         <div class="section-heading split-heading">
           <div>
             <p class="eyebrow">Paper results</p>
-            <h2>Objective quality, temporal offset, and streaming efficiency.</h2>
+            <h2>Objective quality, temporal offset, streaming efficiency, and subjective quality.</h2>
           </div>
           <p>
             Metrics are reported on LibriSpeech test-clean unless otherwise specified. Baselines are grouped into
             streaming or chunk-wise systems and full-utterance or offline references. For all TOSS models in the
-            objective tables, the temporal offset <code>D_T</code> is set to 16 ms.
+            objective tables, the temporal offset <code>D_ms</code> is set to 16 ms.
           </p>
         </div>
 
@@ -214,7 +215,7 @@
           </table>
         </div>
         <p class="table-note">
-          For all TOSS models, the temporal offset <code>D_T</code> used in Temporal Offset Supervision is set to 16 ms.
+          For all TOSS models, the temporal offset <code>D_ms</code> used in Temporal Offset Supervision is set to 16 ms.
           Bold values indicate the best result among streaming or chunk-wise systems. A dash indicates unavailable or not directly comparable information.
         </p>
 
@@ -253,7 +254,7 @@
           </table>
         </div>
         <p class="table-note">
-          For all TOSS models, the temporal offset <code>D_T</code> used in Temporal Offset Supervision is set to 16 ms.
+          For all TOSS models, the temporal offset <code>D_ms</code> used in Temporal Offset Supervision is set to 16 ms.
           Bold values indicate the best result among streaming or chunk-wise systems. A dash indicates unavailable or not directly comparable information.
         </p>
 
@@ -263,7 +264,7 @@
             <thead>
               <tr>
                 <th>System</th>
-                <th>D_T (ms)</th>
+                <th>D_ms (ms)</th>
                 <th>R (kbps)</th>
                 <th>WER ↓</th>
                 <th>PESQ ↑</th>
@@ -274,7 +275,7 @@
             </thead>
             <tbody>
               <tr class="group-row"><td colspan="8">Ours</td></tr>
-              <tr><td>TOSS-Base</td><td>0</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
+              <tr><td>Base</td><td>0</td><td>6.25</td><td>6.26</td><td>1.887</td><td>0.841</td><td>3.168</td><td>3.307</td></tr>
               <tr><td>TOSS-Base</td><td>4</td><td>6.25</td><td>5.66</td><td>1.974</td><td>0.884</td><td>3.255</td><td>3.202</td></tr>
               <tr><td>TOSS-Base</td><td>8</td><td>6.25</td><td><strong>5.22</strong></td><td>2.457</td><td>0.923</td><td>3.508</td><td>2.976</td></tr>
               <tr><td>TOSS-Base</td><td>16</td><td>6.25</td><td>5.32</td><td>3.552</td><td>0.962</td><td>3.778</td><td>2.529</td></tr>
@@ -286,7 +287,7 @@
           </table>
         </div>
         <p class="table-note">
-          <code>D_T=0</code> denotes standard sample-aligned supervision without temporal offset. The upper block studies
+          <code>D_ms=0</code> denotes standard sample-aligned supervision without temporal offset. The upper block studies
           different temporal offsets on TOSS-Base, while the lower block verifies whether the same supervision strategy
           can also improve an external streaming codec. Bold values indicate the best result within each block.
         </p>
@@ -318,35 +319,34 @@
           </figure>
         </div>
 
-        <div class="table-scroll result-table">
+        <div class="table-scroll result-table" id="rtf-mushra">
           <table class="model-table paper-table compact-table">
-            <caption>CPU streaming RTF on LibriSpeech test-clean.</caption>
+            <caption>CPU streaming efficiency and subjective MUSHRA results on LibriSpeech test-clean.</caption>
             <thead>
               <tr>
                 <th>Method</th>
                 <th>SR (kHz)</th>
                 <th>R (kbps)</th>
-                <th>D_T (ms)</th>
-                <th>Config.</th>
+                <th>D_ms (ms)</th>
                 <th>RTF ↓</th>
                 <th>Speed</th>
+                <th>MUSHRA ↑</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>AudioDec</td><td>24</td><td>6.4</td><td>--</td><td><code>libritts_sym</code></td><td>0.251</td><td>3.98x</td></tr>
-              <tr><td>EnCodec</td><td>24</td><td>6.0</td><td>--</td><td>6 kbps target</td><td>0.302</td><td>3.31x</td></tr>
-              <tr><td><strong>TOSS-Tiny</strong></td><td>16</td><td>6.25</td><td>16</td><td><code>n_q=10</code></td><td><strong>0.158</strong></td><td>6.35x</td></tr>
-              <tr><td>TOSS-Small</td><td>16</td><td>6.25</td><td>16</td><td><code>n_q=10</code></td><td>0.204</td><td>4.91x</td></tr>
-              <tr><td>TOSS-Base</td><td>16</td><td>6.25</td><td>16</td><td><code>n_q=10</code></td><td>0.445</td><td>2.25x</td></tr>
+              <tr><td>AudioDec</td><td>24</td><td>6.4</td><td>--</td><td>0.363</td><td>2.76x</td><td>67.33</td></tr>
+              <tr><td>EnCodec</td><td>24</td><td>6.0</td><td>--</td><td>0.357</td><td>2.80x</td><td>62.03</td></tr>
+              <tr><td><strong>TOSS-Tiny</strong></td><td>16</td><td>6.25</td><td>16</td><td><strong>0.275</strong></td><td><strong>3.64x</strong></td><td>67.90</td></tr>
+              <tr><td>TOSS-Small</td><td>16</td><td>6.25</td><td>16</td><td>0.334</td><td>2.99x</td><td>74.10</td></tr>
+              <tr><td><strong>TOSS-Base</strong></td><td>16</td><td>6.25</td><td>16</td><td>0.724</td><td>1.38x</td><td><strong>80.80</strong></td></tr>
             </tbody>
           </table>
         </div>
         <p class="table-note">
-          RTF is measured as duration-weighted wall-clock inference time divided by input duration, excluding model
-          loading and disk I/O. TOSS models are evaluated with 16-ms frames, i.e., 256 samples at 16 kHz, using
-          <code>N_q=10</code> and one CPU thread. Rows differ in sampling rate, bitrate, frame configuration, and
-          implementation backend, so this table should be interpreted as an implementation-efficiency reference rather
-          than a strictly rate-matched comparison.
+          Baseline codecs are evaluated with official pretrained models and native inference granularity, so RTF should
+          be interpreted as an implementation-efficiency reference rather than a strictly rate-matched comparison.
+          MUSHRA follows a subjective listening test with 8 participants rating 10 reconstructed speech sets from
+          LibriSpeech test-clean.
         </p>
       </section>
 
