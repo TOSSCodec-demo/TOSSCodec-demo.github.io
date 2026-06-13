@@ -1,8 +1,8 @@
 # TOSS-Codec Demo Page
 
-Demo page for TOSS-Codec: low-bitrate streaming neural audio codec with Temporal Offset Supervision.
+Demo page for TOSS-Codec: a temporal-offset-supervised streaming audio codec for mobile devices.
 
-This repository contains a static GitHub Pages-style demo page based on the paper "TOSS: Temporal Offset Supervision for Low-Bitrate Streaming Audio Codecs on Mobile Devices".
+This repository contains a static GitHub Pages-style demo page based on the paper "TOSS-Codec: A Temporal-Offset-Supervised Streaming Audio Codec for Mobile Devices".
 
 ## Preview locally
 
@@ -14,28 +14,24 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## Replace audio samples
+## Repository structure
 
-Edit `assets/js/demo-data.js` and place normalized WAV files under:
-
-```text
-assets/audio/3kbps/sampleXX/
-assets/audio/6kbps/sampleXX/
-assets/audio/model_family/sampleXX/
-```
-
-Recommended naming:
+The static page is organized as:
 
 ```text
-gt.wav
-encodec.wav
-audiocodec.wav
-lyra.wav
-speechtokenizer.wav
-dac.wav
-ours_base.wav
-ours_small.wav
-ours_tiny.wav
+index.html
+assets/css/style.css
+assets/js/demo-data.js
+assets/js/main.js
+assets/img/
+assets/audio/
 ```
 
-Keep all systems for the same sample loudness-normalized and time-aligned.
+Audio examples are grouped by bitrate and sample ID:
+
+```text
+assets/audio/3kbps/sample01/
+assets/audio/6kbps/sample01/
+```
+
+All audio examples are intended to be loudness-normalized and time-aligned within each sample group.

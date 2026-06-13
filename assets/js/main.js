@@ -10,6 +10,14 @@
     return audio;
   }
 
+  function createUnavailable(label) {
+    const span = document.createElement("span");
+    span.className = "audio-unavailable";
+    span.textContent = "Audio unavailable";
+    span.setAttribute("aria-label", `${label} audio unavailable`);
+    return span;
+  }
+
   function createTag(tag) {
     const span = document.createElement("span");
     span.className = "sample-tag";
@@ -63,7 +71,9 @@
       section.columns.forEach((column) => {
         const td = document.createElement("td");
         if (column.highlight) td.classList.add("ours-column");
-        td.appendChild(createAudio(sample.audio[column.key], `${sample.id} ${column.label}`));
+        const src = sample.audio[column.key];
+        const label = `${sample.id} ${column.label}`;
+        td.appendChild(src ? createAudio(src, label) : createUnavailable(label));
         row.appendChild(td);
       });
 

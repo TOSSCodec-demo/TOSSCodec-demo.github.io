@@ -1,148 +1,164 @@
 window.tossCodecDemoData = {
   threeKbps: {
-    caption: "3 kbps audio comparison. Replace placeholder files with loudness-normalized WAVs.",
+    caption: "3 kbps audio comparison with matched speech samples across baseline codecs and TOSS-Codec variants.",
     columns: [
       { key: "gt", label: "Ground Truth" },
       { key: "encodec", label: "EnCodec" },
-      { key: "audiocodec", label: "AudioCodec" },
       { key: "lyra", label: "Lyra" },
       { key: "speechTokenizer", label: "SpeechTokenizer" },
-      { key: "dac", label: "DAC" },
-      { key: "oursBase", label: "TOSS-Base", highlight: true }
+      { key: "dac16", label: "DAC 16 kHz" },
+      { key: "tossTiny", label: "TOSS-Tiny" },
+      { key: "tossSmall", label: "TOSS-Small" },
+      { key: "tossBase", label: "TOSS-Base", highlight: true }
     ],
     samples: [
       {
         id: "sample01",
-        text: "Sample 1: clean speech sentence. Replace with transcript.",
-        tags: ["clean", "seen language"],
+        text: "Female speaker, slow speaking rate.",
+        tags: ["female", "slow", "3.125 kbps"],
         audio: {
-          gt: "assets/audio/3kbps/sample01/gt.wav",
+          gt: "assets/audio/3kbps/sample01/gt.flac",
           encodec: "assets/audio/3kbps/sample01/encodec.wav",
-          audiocodec: "assets/audio/3kbps/sample01/audiocodec.wav",
           lyra: "assets/audio/3kbps/sample01/lyra.wav",
           speechTokenizer: "assets/audio/3kbps/sample01/speechtokenizer.wav",
-          dac: "assets/audio/3kbps/sample01/dac.wav",
-          oursBase: "assets/audio/3kbps/sample01/ours_base.wav"
+          dac16: "assets/audio/3kbps/sample01/dac 16.wav",
+          tossTiny: "assets/audio/3kbps/sample01/tiny.wav",
+          tossSmall: "assets/audio/3kbps/sample01/small.wav",
+          tossBase: "assets/audio/3kbps/sample01/base.wav"
         }
       },
       {
         id: "sample02",
-        text: "Sample 2: expressive or prosodically rich speech. Replace with transcript.",
-        tags: ["expressive", "prosody"],
+        text: "Male speaker, fast speaking rate.",
+        tags: ["male", "fast", "3.125 kbps"],
         audio: {
-          gt: "assets/audio/3kbps/sample02/gt.wav",
+          gt: "assets/audio/3kbps/sample02/gt.flac",
           encodec: "assets/audio/3kbps/sample02/encodec.wav",
-          audiocodec: "assets/audio/3kbps/sample02/audiocodec.wav",
           lyra: "assets/audio/3kbps/sample02/lyra.wav",
           speechTokenizer: "assets/audio/3kbps/sample02/speechtokenizer.wav",
-          dac: "assets/audio/3kbps/sample02/dac.wav",
-          oursBase: "assets/audio/3kbps/sample02/ours_base.wav"
+          dac16: "assets/audio/3kbps/sample02/dac 16.wav",
+          tossTiny: "assets/audio/3kbps/sample02/tiny.wav",
+          tossSmall: "assets/audio/3kbps/sample02/small.wav",
+          tossBase: "assets/audio/3kbps/sample02/base.wav"
         }
       },
       {
         id: "sample03",
-        text: "Sample 3: challenging unseen speaker. Replace with transcript.",
-        tags: ["unseen speaker"],
+        text: "Female speaker, fast speaking rate.",
+        tags: ["female", "fast", "3.125 kbps"],
         audio: {
-          gt: "assets/audio/3kbps/sample03/gt.wav",
+          gt: "assets/audio/3kbps/sample03/gt.flac",
           encodec: "assets/audio/3kbps/sample03/encodec.wav",
-          audiocodec: "assets/audio/3kbps/sample03/audiocodec.wav",
           lyra: "assets/audio/3kbps/sample03/lyra.wav",
           speechTokenizer: "assets/audio/3kbps/sample03/speechtokenizer.wav",
-          dac: "assets/audio/3kbps/sample03/dac.wav",
-          oursBase: "assets/audio/3kbps/sample03/ours_base.wav"
+          dac16: "assets/audio/3kbps/sample03/dac 16.wav",
+          tossTiny: "assets/audio/3kbps/sample03/tiny.wav",
+          tossSmall: "assets/audio/3kbps/sample03/small.wav",
+          tossBase: "assets/audio/3kbps/sample03/base.wav"
         }
       }
     ]
   },
   sixKbps: {
-    caption: "6 kbps audio comparison. Keep sample IDs aligned with the 3 kbps section when possible.",
+    caption: "6 kbps audio comparison with matched speech samples across baseline codecs and TOSS-Codec variants.",
     columns: [
       { key: "gt", label: "Ground Truth" },
       { key: "encodec", label: "EnCodec" },
-      { key: "audiocodec", label: "AudioCodec" },
+      { key: "audiodec", label: "AudioDec" },
       { key: "lyra", label: "Lyra" },
-      { key: "oursBase", label: "TOSS-Base", highlight: true }
+      { key: "dac16", label: "DAC 16 kHz" },
+      { key: "tossTiny", label: "TOSS-Tiny" },
+      { key: "tossSmall", label: "TOSS-Small" },
+      { key: "tossBase", label: "TOSS-Base", highlight: true }
     ],
     samples: [
       {
         id: "sample01",
-        text: "Sample 1: clean speech sentence. Replace with transcript.",
-        tags: ["clean", "6 kbps"],
+        text: "Female speaker, slow speaking rate.",
+        tags: ["female", "slow", "6.25 kbps"],
         audio: {
-          gt: "assets/audio/6kbps/sample01/gt.wav",
+          gt: "assets/audio/6kbps/sample01/gt.flac",
           encodec: "assets/audio/6kbps/sample01/encodec.wav",
-          audiocodec: "assets/audio/6kbps/sample01/audiocodec.wav",
+          audiodec: "assets/audio/6kbps/sample01/audiodec.wav",
           lyra: "assets/audio/6kbps/sample01/lyra.wav",
-          oursBase: "assets/audio/6kbps/sample01/ours_base.wav"
+          dac16: "assets/audio/6kbps/sample01/dac 16.wav",
+          tossTiny: "assets/audio/6kbps/sample01/tiny.wav",
+          tossSmall: "assets/audio/6kbps/sample01/small.wav",
+          tossBase: "assets/audio/6kbps/sample01/base.wav"
         }
       },
       {
         id: "sample02",
-        text: "Sample 2: expressive or prosodically rich speech. Replace with transcript.",
-        tags: ["expressive", "6 kbps"],
+        text: "Male speaker, fast speaking rate.",
+        tags: ["male", "fast", "6.25 kbps"],
         audio: {
-          gt: "assets/audio/6kbps/sample02/gt.wav",
+          gt: "assets/audio/6kbps/sample02/gt.flac",
           encodec: "assets/audio/6kbps/sample02/encodec.wav",
-          audiocodec: "assets/audio/6kbps/sample02/audiocodec.wav",
+          audiodec: "assets/audio/6kbps/sample02/audiodec.wav",
           lyra: "assets/audio/6kbps/sample02/lyra.wav",
-          oursBase: "assets/audio/6kbps/sample02/ours_base.wav"
+          dac16: "assets/audio/6kbps/sample02/dac 16.wav",
+          tossTiny: "assets/audio/6kbps/sample02/tiny.wav",
+          tossSmall: "assets/audio/6kbps/sample02/small.wav",
+          tossBase: "assets/audio/6kbps/sample02/base.wav"
         }
       },
       {
         id: "sample03",
-        text: "Sample 3: challenging unseen speaker. Replace with transcript.",
-        tags: ["unseen speaker", "6 kbps"],
+        text: "Female speaker, fast speaking rate.",
+        tags: ["female", "fast", "6.25 kbps"],
         audio: {
-          gt: "assets/audio/6kbps/sample03/gt.wav",
+          gt: "assets/audio/6kbps/sample03/gt.flac",
           encodec: "assets/audio/6kbps/sample03/encodec.wav",
-          audiocodec: "assets/audio/6kbps/sample03/audiocodec.wav",
+          audiodec: "assets/audio/6kbps/sample03/audiodec.wav",
           lyra: "assets/audio/6kbps/sample03/lyra.wav",
-          oursBase: "assets/audio/6kbps/sample03/ours_base.wav"
+          dac16: "assets/audio/6kbps/sample03/dac 16.wav",
+          tossTiny: "assets/audio/6kbps/sample03/tiny.wav",
+          tossSmall: "assets/audio/6kbps/sample03/small.wav",
+          tossBase: "assets/audio/6kbps/sample03/base.wav"
         }
       }
     ]
   },
   modelFamily: {
-    caption: "TOSS-Codec model-family comparison. Use the same bitrate and offset for Tiny, Small, and Base.",
+    caption: "TOSS-Codec model-family comparison. These rows reuse the currently available 3 kbps Tiny, Small, and Base samples.",
     columns: [
       { key: "gt", label: "Ground Truth" },
-      { key: "oursTiny", label: "TOSS-Tiny" },
-      { key: "oursSmall", label: "TOSS-Small" },
-      { key: "oursBase", label: "TOSS-Base", highlight: true }
+      { key: "tossTiny", label: "TOSS-Tiny" },
+      { key: "tossSmall", label: "TOSS-Small" },
+      { key: "tossBase", label: "TOSS-Base", highlight: true }
     ],
     samples: [
       {
         id: "sample01",
-        text: "Sample 1: model scale comparison. Replace with transcript.",
-        tags: ["family", "same bitrate"],
+        text: "Female speaker, slow speaking rate.",
+        tags: ["female", "slow", "family"],
         audio: {
-          gt: "assets/audio/model_family/sample01/gt.wav",
-          oursTiny: "assets/audio/model_family/sample01/ours_tiny.wav",
-          oursSmall: "assets/audio/model_family/sample01/ours_small.wav",
-          oursBase: "assets/audio/model_family/sample01/ours_base.wav"
+          gt: "assets/audio/3kbps/sample01/gt.flac",
+          tossTiny: "assets/audio/3kbps/sample01/tiny.wav",
+          tossSmall: "assets/audio/3kbps/sample01/small.wav",
+          tossBase: "assets/audio/3kbps/sample01/base.wav"
         }
       },
       {
         id: "sample02",
-        text: "Sample 2: model scale comparison. Replace with transcript.",
-        tags: ["family", "same offset"],
+        text: "Male speaker, fast speaking rate.",
+        tags: ["male", "fast", "family"],
         audio: {
-          gt: "assets/audio/model_family/sample02/gt.wav",
-          oursTiny: "assets/audio/model_family/sample02/ours_tiny.wav",
-          oursSmall: "assets/audio/model_family/sample02/ours_small.wav",
-          oursBase: "assets/audio/model_family/sample02/ours_base.wav"
+          gt: "assets/audio/3kbps/sample02/gt.flac",
+          tossTiny: "assets/audio/3kbps/sample02/tiny.wav",
+          tossSmall: "assets/audio/3kbps/sample02/small.wav",
+          tossBase: "assets/audio/3kbps/sample02/base.wav"
         }
       },
       {
         id: "sample03",
-        text: "Sample 3: model scale comparison. Replace with transcript.",
-        tags: ["family", "efficiency"],
+        text: "Female speaker, fast speaking rate.",
+        tags: ["female", "fast", "family"],
         audio: {
-          gt: "assets/audio/model_family/sample03/gt.wav",
-          oursTiny: "assets/audio/model_family/sample03/ours_tiny.wav",
-          oursSmall: "assets/audio/model_family/sample03/ours_small.wav",
-          oursBase: "assets/audio/model_family/sample03/ours_base.wav"
+          gt: "assets/audio/3kbps/sample03/gt.flac",
+          tossTiny: "assets/audio/3kbps/sample03/tiny.wav",
+          tossSmall: "assets/audio/3kbps/sample03/small.wav",
+          tossBase: "assets/audio/3kbps/sample03/base.wav"
         }
       }
     ]
